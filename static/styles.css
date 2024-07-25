@@ -12,7 +12,7 @@ body {
 }
 
 .container {
-    margin-top: 20px;
+    margin-top: 50px;
 }
 
 
@@ -22,6 +22,19 @@ body {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+    margin-bottom: 5px;
+}
+
+
+.sub-title {
+    font-size: 15px;
+    font-style: italic;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 0px;
 }
 
 .list {
@@ -32,7 +45,7 @@ body {
     list-style-type: none;
     padding: 20px; /* Add padding for better spacing */
     margin: 0;
-    width: 45%;
+    width: 20%;
     background-color: rgba(0, 0, 0, 0.8); /* Opaque black background */
     border-radius: 10px; /* Optional: rounded corners */
 
@@ -54,4 +67,22 @@ body {
 
 .list li span {
     text-align: right;
+}
+
+.username {
+    text-align: left !important;
+}
+
+a {
+    color: white; /* Set the desired color for the links */
+    text-decoration: none; /* Remove underline */
+}
+
+a:visited {
+    color: white; /* Ensure visited links have the same color */
+}
+
+a:hover {
+    text-decoration: underline;
+    text-decoration-color: white;
 }

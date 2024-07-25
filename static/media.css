@@ -1,0 +1,11 @@
+@media (max-width: 1200px) {
+    .list {
+        width: 40%;
+    }
+}
+
+@media (max-width: 500px) {
+    .list {
+        width: 70%;
+    }
+}

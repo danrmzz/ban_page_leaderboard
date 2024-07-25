@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leaderboard</title>
+    <title>Top SaiCo Bans</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='media.css') }}">
+    <link rel="shortcut icon" href="static/ban_hamer.png" type="image/x-icon">
 </head>
 <body>
     <div class="container">
-        <h1 class="title">SaiCo players with the most bans</h1>
+        <h1 class="title">SaiCo players with the MOST bans</h1>
+        <p class="sub-title">2024 - present</p>
         <ol class="list">
             {% for player in top_10_sorted %}
             <li>
                 <img src="https://visage.surgeplay.com/head/50/{{ player.uuid }}" alt="{{ player.username }}'s head">
-                <span class="username">{{ player.username }}</span>
+                <a href="https://saicopvp.com/bans/history.php?uuid={{ player.uuid }}&from=bans" target="_blank"><span class="username">{{ player.username }}</span></a>
                 <span>{{ player.count }}</span>
             </li>
             {% endfor %}

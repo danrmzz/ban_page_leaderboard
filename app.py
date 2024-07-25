@@ -78,6 +78,10 @@ def fetch_uuid(username):
         print(f"Error fetching UUID for {username}: {e}")
         return None
 
+# Function to format UUID with dashes
+def format_uuid(uuid):
+    return f"{uuid[:8]}-{uuid[8:12]}-{uuid[12:16]}-{uuid[16:20]}-{uuid[20:]}"
+
 @app.route('/')
 def index():
     # Reset the global username_counts
@@ -100,6 +104,8 @@ def index():
     top_10_with_uuids = []
     for username, count in top_10_sorted:
         uuid = fetch_uuid(username)
+        if uuid:
+            uuid = format_uuid(uuid)
         top_10_with_uuids.append({"username": username, "count": count, "uuid": uuid})
 
     # Pass the list to the template
