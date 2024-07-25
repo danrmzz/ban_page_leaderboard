@@ -3,6 +3,7 @@ import asyncio
 from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
 from collections import Counter
+import requests
 
 app = Flask(__name__)
 
@@ -62,6 +63,21 @@ async def run_scraper():
         
         await browser.close()
 
+# Function to fetch UUID for a given username
+def fetch_uuid(username):
+    url = f"https://api.mojang.com/users/profiles/minecraft/{username}"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            return data.get("id")
+        else:
+            print(f"Failed to fetch UUID for {username}: {response.status_code}")
+            return None
+    except Exception as e:
+        print(f"Error fetching UUID for {username}: {e}")
+        return None
+
 @app.route('/')
 def index():
     # Reset the global username_counts
@@ -80,7 +96,14 @@ def index():
     # Get the top 10 sorted players
     top_10_sorted = sorted_top_players[:10]
 
-    return render_template('index.html', top_10_sorted=top_10_sorted)
+    # Fetch UUIDs for the top 10 players and add to the dictionary
+    top_10_with_uuids = []
+    for username, count in top_10_sorted:
+        uuid = fetch_uuid(username)
+        top_10_with_uuids.append({"username": username, "count": count, "uuid": uuid})
+
+    # Pass the list to the template
+    return render_template('index.html', top_10_sorted=top_10_with_uuids)
 
 if __name__ == '__main__':
     app.run(debug=True)

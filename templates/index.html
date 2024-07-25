@@ -10,9 +10,11 @@
     <div class="container">
         <h1 class="title">SaiCo players with the most bans</h1>
         <ol class="list">
-            {% for username, count in top_10_sorted %}
+            {% for player in top_10_sorted %}
             <li>
-                <img src="https://visage.surgeplay.com/head/50/{{ username }}" alt="{{ username }}'s head"> <span>{{ username }}</span> <span>{{ count }}</span>
+                <img src="https://visage.surgeplay.com/head/50/{{ player.uuid }}" alt="{{ player.username }}'s head">
+                <span class="username">{{ player.username }}</span>
+                <span>{{ player.count }}</span>
             </li>
             {% endfor %}
         </ol>
