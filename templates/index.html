@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">SaiCo players with the most bans</h1>
+        <ol class="list">
+            {% for username, count in top_10_sorted %}
+            <li>
+                <img src="https://visage.surgeplay.com/head/50/{{ username }}" alt="{{ username }}'s head"> <span>{{ username }}</span> <span>{{ count }}</span>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+</body>
+</html>

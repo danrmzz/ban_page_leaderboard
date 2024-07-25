@@ -1,7 +1,10 @@
+from flask import Flask, render_template
 import asyncio
 from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
 from collections import Counter
+
+app = Flask(__name__)
 
 # Initialize the counter for usernames
 username_counts = Counter()
@@ -42,8 +45,8 @@ def merge_counts(counts_list):
     for counts in counts_list:
         username_counts.update(counts)
 
-# Main function to run the asyncio event loop
-async def main():
+# Asynchronous function to run the web scraping process
+async def run_scraper():
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         
@@ -59,24 +62,25 @@ async def main():
         
         await browser.close()
 
-# Run the main function
-asyncio.run(main())
+@app.route('/')
+def index():
+    # Reset the global username_counts
+    global username_counts
+    username_counts = Counter()
+    
+    # Run the scraper and wait for it to complete
+    asyncio.run(run_scraper())
 
-# Get the top 10 players
-top_players = username_counts.most_common()
+    # Get the top 10 players
+    top_players = username_counts.most_common()
 
-# Sort top players lexicographically if they have the same count
-sorted_top_players = sorted(top_players, key=lambda x: (-x[1], x[0].lower()))
+    # Sort top players lexicographically if they have the same count
+    sorted_top_players = sorted(top_players, key=lambda x: (-x[1], x[0].lower()))
 
-# Get the top 10 sorted players
-top_10_sorted = sorted_top_players[:10]
+    # Get the top 10 sorted players
+    top_10_sorted = sorted_top_players[:10]
 
-# Print the top 10 players
-print("Leaderboard:")
-for username, count in top_10_sorted:
-    print(f"{username}: {count}")
+    return render_template('index.html', top_10_sorted=top_10_sorted)
 
-# # Print the complete dictionary
-# print("\nComplete dictionary of usernames and counts:")
-# for username, count in username_counts.items():
-#     print(f"{username}: {count}")
+if __name__ == '__main__':
+    app.run(debug=True)
