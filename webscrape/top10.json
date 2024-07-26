@@ -5,14 +5,19 @@
         "uuid": "b2cec80e-ea75-419e-9a70-307b7c3b73e3"
     },
     {
+        "username": "jonsnowkiller42",
+        "count": 14,
+        "uuid": null
+    },
+    {
+        "username": "WhyViolet",
+        "count": 14,
+        "uuid": "2dd5c20d-43f9-48d4-bc97-3d02b91d422e"
+    },
+    {
         "username": "JakeIsLoyal",
         "count": 12,
         "uuid": "66c38665-1d9a-478a-96e4-f723195d3333"
-    },
-    {
-        "username": "jonsnowkiller42",
-        "count": 12,
-        "uuid": null
     },
     {
         "username": "kLompi_",
@@ -23,11 +28,6 @@
         "username": "Lucqs_",
         "count": 12,
         "uuid": "d3d2ec30-e430-4967-8b8f-bf89fe85a905"
-    },
-    {
-        "username": "WhyViolet",
-        "count": 12,
-        "uuid": "2dd5c20d-43f9-48d4-bc97-3d02b91d422e"
     },
     {
         "username": "ChainPvP",
