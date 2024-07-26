@@ -4,11 +4,18 @@ from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
 from collections import Counter
 import requests
+import aiocache
 
 app = Flask(__name__)
 
 # Initialize the counter for usernames
 username_counts = Counter()
+
+# Cache for UUIDs
+uuid_cache = aiocache.SimpleMemoryCache()
+
+# Semaphore to limit concurrent requests
+semaphore = asyncio.Semaphore(10)
 
 # Function to process a single page
 async def process_page(page_number, browser):
@@ -20,11 +27,12 @@ async def process_page(page_number, browser):
         "Referer": "https://saicopvp.com"
     }
 
-    context = await browser.new_context(extra_http_headers=headers)
-    page = await context.new_page()
-    await page.goto(url)
-    content = await page.content()
-    await context.close()
+    async with semaphore:
+        context = await browser.new_context(extra_http_headers=headers)
+        page = await context.new_page()
+        await page.goto(url)
+        content = await page.content()
+        await context.close()
 
     # Parse the relevant part of the HTML with BeautifulSoup using lxml parser
     soup = BeautifulSoup(content, "lxml")
@@ -64,13 +72,19 @@ async def run_scraper():
         await browser.close()
 
 # Function to fetch UUID for a given username
-def fetch_uuid(username):
+async def fetch_uuid(username):
+    cached_uuid = await uuid_cache.get(username)
+    if cached_uuid:
+        return cached_uuid
+
     url = f"https://api.mojang.com/users/profiles/minecraft/{username}"
     try:
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
-            return data.get("id")
+            uuid = data.get("id")
+            await uuid_cache.set(username, uuid, ttl=3600)  # Cache for 1 hour
+            return uuid
         else:
             print(f"Failed to fetch UUID for {username}: {response.status_code}")
             return None
@@ -83,13 +97,13 @@ def format_uuid(uuid):
     return f"{uuid[:8]}-{uuid[8:12]}-{uuid[12:16]}-{uuid[16:20]}-{uuid[20:]}"
 
 @app.route('/')
-def index():
+async def index():
     # Reset the global username_counts
     global username_counts
     username_counts = Counter()
     
     # Run the scraper and wait for it to complete
-    asyncio.run(run_scraper())
+    await run_scraper()
 
     # Get the top 10 players
     top_players = username_counts.most_common()
@@ -103,7 +117,7 @@ def index():
     # Fetch UUIDs for the top 10 players and add to the dictionary
     top_10_with_uuids = []
     for username, count in top_10_sorted:
-        uuid = fetch_uuid(username)
+        uuid = await fetch_uuid(username)
         if uuid:
             uuid = format_uuid(uuid)
         top_10_with_uuids.append({"username": username, "count": count, "uuid": uuid})
