@@ -13,6 +13,7 @@ body {
 
 .container {
     margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 
@@ -83,6 +84,32 @@ a:visited {
 }
 
 a:hover {
+    color: rgb(1, 18, 255);
+}
+
+.data-source {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.logo {
+    width: 35px;
+    height: auto;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 25px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.logo:hover {
+    transform: scale(1.11);
+}
+
+.data-source:hover {
     text-decoration: underline;
     text-decoration-color: white;
+    color: white;
 }
