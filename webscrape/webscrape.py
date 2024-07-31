@@ -49,7 +49,7 @@ async def run_scraper():
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         
-        tasks = [process_page(page_number, browser) for page_number in range(1, 110)]
+        tasks = [process_page(page_number, browser) for page_number in range(1, 114)]
         
         results = await asyncio.gather(*tasks, return_exceptions=True)
         
